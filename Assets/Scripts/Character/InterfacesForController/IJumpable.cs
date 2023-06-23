@@ -6,4 +6,5 @@ public interface IJumpable
 {
     public void HandleJump();
     public bool IsJumping();
+    public bool IsFalling();
 }

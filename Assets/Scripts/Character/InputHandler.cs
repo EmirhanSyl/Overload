@@ -23,7 +23,10 @@ public class InputHandler : MonoBehaviour
 
     void Update()
     {
-        movable.HandleMovement(xInput);
+        if (!dashable.IsDashing())
+        {
+            movable.HandleMovement(xInput, false);
+        }
     }
 
     public void OnMovePerformed(InputAction.CallbackContext callback)
@@ -33,12 +36,16 @@ public class InputHandler : MonoBehaviour
 
     public void OnJumpPerformed(InputAction.CallbackContext context)
     {
-        jumpable.HandleJump();
+        if (context.phase == InputActionPhase.Started)
+        {
+            jumpable.HandleJump();
+        }
     }
 
     public void OnDashPerformed(InputAction.CallbackContext context)
     {
         dashable.HandleDash();
+        movable.HandleMovement(0, true);
     }
 
     public void OnAttackPerformed(InputAction.CallbackContext context)

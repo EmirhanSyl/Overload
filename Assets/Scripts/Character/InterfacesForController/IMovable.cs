@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IMovable
 {
-    public void HandleMovement(float horizontalInput);
+    public void HandleMovement(float horizontalInput, bool isStop);
     public float GetSpeed();
 }

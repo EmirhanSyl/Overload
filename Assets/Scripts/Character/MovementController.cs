@@ -12,14 +12,18 @@ public class MovementController : MonoBehaviour, IMovable
     [SerializeField] private float accelerationPower = 2f;
     [SerializeField] private float friction = 1f;
 
+    private bool stopControlling;
+
     private Vector2 moveInput;
     private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
 
 
     void Start()
     {
         moveInput = Vector2.zero;
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -29,6 +33,8 @@ public class MovementController : MonoBehaviour, IMovable
 
     private void FixedUpdate()
     {
+        if (stopControlling) return;
+
         float targetSpeed = moveInput.x * moveSpeed;
         float speedDifferance = targetSpeed - rb.velocity.x;
 
@@ -40,9 +46,19 @@ public class MovementController : MonoBehaviour, IMovable
         rb.velocity = new Vector2(moveInput.x * moveSpeed, rb.velocity.y);
     }
 
-    public void HandleMovement(float horizontalInput)
+    public void HandleMovement(float horizontalInput, bool isStop)
     {
+        stopControlling = isStop;
+
         moveInput.x = horizontalInput;
+        if (moveInput.x > 0)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else if (moveInput.x < 0)
+        {
+            spriteRenderer.flipX= true;
+        }
     }
 
     private void ApplyFriction(ref Vector2 velocity)
@@ -57,5 +73,10 @@ public class MovementController : MonoBehaviour, IMovable
             velocity.x += friction * Time.deltaTime;
             velocity.x = Mathf.Min(velocity.x, 0f);
         }
+    }
+
+    public float GetSpeed()
+    {
+        return moveInput.x;
     }
 }
