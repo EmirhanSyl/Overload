@@ -17,6 +17,8 @@ public class SlideController : MonoBehaviour, ISlidable
     private float colliderWidth;
     private float colliderHeigh;
 
+    private int direction;
+
     private bool isSliding;
     private bool canSlide = true;
 
@@ -38,15 +40,16 @@ public class SlideController : MonoBehaviour, ISlidable
 
     void Update()
     {
+        direction = (sRenderer.flipX) ? -1 : 1;
         if (isSliding)
         {
-            int direction = (sRenderer.flipX) ? -1: 1;
             rb.velocity = new Vector2(slideSpeed * direction, rb.velocity.y);
         }
     }
 
     public void HandleSlide()
     {
+        //checkObsticles();
         if (!isSliding && canSlide && groundChecker.IsGrounded)
         {
             StartCoroutine(SlideRoutine());
@@ -67,6 +70,22 @@ public class SlideController : MonoBehaviour, ISlidable
         yield return new WaitForSeconds(slideCooldown);
         canSlide = true;
 
+    }
+
+    private void checkObsticles()
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right * direction, 1f);
+
+        bool result = false;
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.collider != null && !hit.collider.CompareTag("Background") && !hit.collider.gameObject.Equals(this.gameObject))
+            {
+                result = false;
+            }
+        }
+
+        canSlide = result;
     }
 
     public bool IsSliding()

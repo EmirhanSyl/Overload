@@ -9,6 +9,7 @@ public class AnimationController : MonoBehaviour
     private IJumpable jumpable;
     private IDashable dashable;
     private ISlidable slidable;
+    private IRollable rollable;
     private IAttackable attackable;
 
     private void Awake()
@@ -18,6 +19,7 @@ public class AnimationController : MonoBehaviour
         jumpable = GetComponent<IJumpable>();
         dashable = GetComponent<IDashable>();
         slidable = GetComponent<ISlidable>();
+        rollable = GetComponent<IRollable>();
         attackable = GetComponent<IAttackable>();
     }
 
@@ -28,6 +30,7 @@ public class AnimationController : MonoBehaviour
         animator.SetBool("IsFalling", jumpable.IsFalling());
         animator.SetBool("IsDashing", dashable.IsDashing());
         animator.SetBool("IsSliding", slidable.IsSliding());
+        animator.SetBool("IsRolling", rollable.IsRolling());
         //animator.SetBool("IsAttacking", attackable.IsAttacking());
     }
 }

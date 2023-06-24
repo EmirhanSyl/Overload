@@ -12,6 +12,7 @@ public class InputHandler : MonoBehaviour
     private IJumpable jumpable;
     private IDashable dashable;
     private ISlidable slidable;
+    private IRollable rollable;
     private IAttackable attackable;
 
     void Start()
@@ -21,11 +22,12 @@ public class InputHandler : MonoBehaviour
         dashable = GetComponent<IDashable>();
         slidable = GetComponent<ISlidable>();
         attackable = GetComponent<IAttackable>();
+        rollable = GetComponent<IRollable>();
     }
 
     void Update()
     {
-        if (!dashable.IsDashing() && !slidable.IsSliding())
+        if (!dashable.IsDashing() && !slidable.IsSliding() && !rollable.IsRolling())
         {
             movable.HandleMovement(xInput, false);
         }
@@ -38,7 +40,7 @@ public class InputHandler : MonoBehaviour
 
     public void OnJumpPerformed(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started && !slidable.IsSliding())
+        if (context.phase == InputActionPhase.Started && !slidable.IsSliding() && !rollable.IsRolling())
         {
             jumpable.HandleJump();
         }
@@ -46,7 +48,7 @@ public class InputHandler : MonoBehaviour
 
     public void OnDashPerformed(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started && !slidable.IsSliding())
+        if (context.phase == InputActionPhase.Started && !slidable.IsSliding() && !rollable.IsRolling())
         {
             dashable.HandleDash();
             movable.HandleMovement(0, true);
@@ -55,9 +57,18 @@ public class InputHandler : MonoBehaviour
 
     public void OnSlidePerformed(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started && !jumpable.IsFalling())
+        if (context.phase == InputActionPhase.Started && !jumpable.IsFalling() && !rollable.IsRolling())
         {
             slidable.HandleSlide();
+            movable.HandleMovement(0, true);
+        }
+    }
+
+    public void OnRollPerformed(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started && !jumpable.IsFalling() && !slidable.IsSliding())
+        {
+            rollable.HandleRolling();
             movable.HandleMovement(0, true);
         }
     }
