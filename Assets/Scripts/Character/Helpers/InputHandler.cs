@@ -11,6 +11,7 @@ public class InputHandler : MonoBehaviour
     private IMovable movable;
     private IJumpable jumpable;
     private IDashable dashable;
+    private ISlidable slidable;
     private IAttackable attackable;
 
     void Start()
@@ -18,12 +19,13 @@ public class InputHandler : MonoBehaviour
         movable = GetComponent<IMovable>();
         jumpable = GetComponent<IJumpable>();
         dashable = GetComponent<IDashable>();
+        slidable = GetComponent<ISlidable>();
         attackable = GetComponent<IAttackable>();
     }
 
     void Update()
     {
-        if (!dashable.IsDashing())
+        if (!dashable.IsDashing() && !slidable.IsSliding())
         {
             movable.HandleMovement(xInput, false);
         }
@@ -36,7 +38,7 @@ public class InputHandler : MonoBehaviour
 
     public void OnJumpPerformed(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started)
+        if (context.phase == InputActionPhase.Started && !slidable.IsSliding())
         {
             jumpable.HandleJump();
         }
@@ -44,8 +46,20 @@ public class InputHandler : MonoBehaviour
 
     public void OnDashPerformed(InputAction.CallbackContext context)
     {
-        dashable.HandleDash();
-        movable.HandleMovement(0, true);
+        if (context.phase == InputActionPhase.Started && !slidable.IsSliding())
+        {
+            dashable.HandleDash();
+            movable.HandleMovement(0, true);
+        }
+    }
+
+    public void OnSlidePerformed(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started && !jumpable.IsFalling())
+        {
+            slidable.HandleSlide();
+            movable.HandleMovement(0, true);
+        }
     }
 
     public void OnAttackPerformed(InputAction.CallbackContext context)
