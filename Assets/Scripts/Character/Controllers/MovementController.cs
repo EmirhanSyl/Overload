@@ -46,10 +46,8 @@ public class MovementController : MonoBehaviour, IMovable
         rb.velocity = new Vector2(moveInput.x * moveSpeed, rb.velocity.y);
     }
 
-    public void HandleMovement(float horizontalInput, bool isStop)
+    public void HandleMovement(float horizontalInput)
     {
-        stopControlling = isStop;
-
         moveInput.x = horizontalInput;
         if (moveInput.x > 0)
         {
@@ -78,5 +76,10 @@ public class MovementController : MonoBehaviour, IMovable
     public float GetSpeed()
     {
         return moveInput.x;
+    }
+
+    public void ChangeControls(bool isStop)
+    {
+        stopControlling = isStop;
     }
 }

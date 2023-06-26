@@ -13,6 +13,7 @@ public class InputHandler : MonoBehaviour
     private IDashable dashable;
     private ISlidable slidable;
     private IRollable rollable;
+    private IWallSlidable wallSlidable;
     private IAttackable attackable;
 
     void Start()
@@ -23,13 +24,14 @@ public class InputHandler : MonoBehaviour
         slidable = GetComponent<ISlidable>();
         attackable = GetComponent<IAttackable>();
         rollable = GetComponent<IRollable>();
+        wallSlidable = GetComponent<IWallSlidable>();
     }
 
     void Update()
     {
         if (!dashable.IsDashing() && !slidable.IsSliding() && !rollable.IsRolling())
         {
-            movable.HandleMovement(xInput, false);
+            movable.HandleMovement(xInput);
         }
     }
 
